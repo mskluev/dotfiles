@@ -84,3 +84,32 @@ echo
 
 check_default_shell
 
+## VIM
+# vimrc vundle install
+echo ''
+echo "Now installing vundle and vim plugins..."
+echo ''
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+# Pathogen install
+mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+	curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+# Nerdtree for vim install
+git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree
+
+# Vim color scheme install
+git clone https://github.com/sheerun/vim-wombat-scheme.git ~/.vim/colors/wombat 
+mv ~/.vim/colors/wombat/colors/* ~/.vim/colors/
+
+# Symlinks
+echo "Do you want to use these dotfiles? (y/n)"
+old_stty_cfg=$(stty -g)
+stty raw -echo
+answer=$( while ! head -c 1 | grep -i '[ny]' ;do true ;done )
+stty $old_stty_cfg
+if echo "$answer" | grep -iq "^y" ;then
+	echo "Now configuring symlinks..." && ./scripts/bootstrap
+else
+	echo "Skipping symlinks..."
+fi
